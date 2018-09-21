@@ -44,11 +44,11 @@ output "cluster_ca_certificate" {
 }
 
 output "cluster_name" {
-  value       =  "${google_container_cluster.new_container_cluster.name}"
+  value       =  "${module.gke-cluster.cluster_name}"
   description =  "The full name of this Kubernetes cluster"
 }
 
 output "gcr_url" {
-  value       = "${google_container_cluster.registry.repository_url}"
+  value       = "${module.gke-cluster.gcr_url}"
   description = "This data source fetches the project name, and provides the appropriate URLs to use for container registry for this project"
 }
