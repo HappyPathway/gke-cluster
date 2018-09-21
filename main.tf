@@ -1,3 +1,13 @@
+data "vault_generic_secret" "gcp" {
+    path = "${var.vault_gcp_credentials_path}"
+}
+
+provider "google" {
+  credentials = "${data.vault_generic_secret.gcp.data["json"]}"
+  project     = "${data.vault_generic_secret.gcp.data["project_id"]}"
+  region      = "${var.cluster_zone}"
+}
+
 resource "random_string" "username" {
   length  = 16
   special = true
