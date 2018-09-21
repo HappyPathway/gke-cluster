@@ -10,7 +10,7 @@ provider "google" {
 
 resource "random_string" "username" {
   length  = 16
-  special = true
+  special = false
   number  = true
   lower   = true
   upper   = true
