@@ -49,6 +49,6 @@ output "cluster_name" {
 }
 
 output "gcr_url" {
-  value       = "${data.google_container_registry_repository.registry.repository_url}"
+  value       = "${google_container_cluster.registry.repository_url}"
   description = "This data source fetches the project name, and provides the appropriate URLs to use for container registry for this project"
 }
