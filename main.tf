@@ -25,40 +25,51 @@ resource "random_string" "password" {
 }
 
 
-module "gke-cluster" {
-  source = "google-terraform-modules/kubernetes-engine/google"
-  version = "1.17.0"
+resource "google_container_cluster" "primary" {
+  name               = "${var.cluster_name}"
+  zone               = "${var.cluster_zone}"
+  initial_node_count = 3
 
-  general = {
-    name = "${var.cluster_name}"
-    env  = "${var.cluster_env}"
-    zone = "${var.cluster_zone}"
-  }
+  additional_zones = [
+    "us-central1-b",
+    "us-central1-c",
+  ]
 
-  master = {
+  master_auth {
     username = "${random_string.username.result}"
     password = "${random_string.password.result}"
+    client_certificate_config {
+      issue_client_certificate = false
+    }
   }
 
-  default_node_pool = {
-    node_count = 3
-    remove     = false
-  }
+  node_config {
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/compute",
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
 
-  # Optional in case we have a default pool
-  node_pool = [
-    {
-      machine_type   = "g1-small"
-      disk_size_gb   = 20
-      node_count     = 3
-      min_node_count = 2
-      max_node_count = 4
-    },
-    {
-      disk_size_gb   = 30
-      node_count     = 2
-      min_node_count = 1
-      max_node_count = 3
-    },
-  ]
+    
+  }
+}
+
+# The following outputs allow authentication and connectivity to the GKE Cluster.
+output "client_certificate" {
+  value = "${google_container_cluster.primary.master_auth.0.client_certificate}"
+}
+
+output "client_key" {
+  value = "${google_container_cluster.primary.master_auth.0.client_key}"
+}
+
+output "cluster_ca_certificate" {
+  value = "${google_container_cluster.primary.master_auth.0.cluster_ca_certificate}"
+}
+
+
+output "endpoint" {
+  value       = "${google_container_cluster.primary.endpoint}"
+  description = "The IP address of this cluster's Kubernetes master"
 }
