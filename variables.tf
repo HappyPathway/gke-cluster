@@ -1,5 +1,18 @@
 variable "cluster_zone" {
     
+
+}
+
+variable "timestamp_cmd" {
+    type = "list"
+    description = "Command for timestamp"
+    default = ["date", 
+               "+%s", 
+               "|", 
+               "/usr/bin/env", 
+               "python2.7", 
+               "-c", 
+               "import sys, json; print json.dumps(dict(timestamp=sys.stdin.read().strip()))"] 
 }
 
 variable "additional_zones" {
