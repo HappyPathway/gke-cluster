@@ -2,6 +2,10 @@ data "vault_generic_secret" "gcp" {
     path = "${var.vault_gcp_credentials_path}"
 }
 
+module "force_update" {
+  source = "github.com/HappyPathway/terraform-null-update"
+}
+
 provider "google" {
   credentials = "${data.vault_generic_secret.gcp.data["json"]}"
   project     = "${data.vault_generic_secret.gcp.data["project_id"]}"
