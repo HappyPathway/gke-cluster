@@ -36,7 +36,7 @@ resource "google_container_cluster" "primary" {
     username = "${random_string.username.result}"
     password = "${random_string.password.result}"
     client_certificate_config {
-      issue_client_certificate = false
+      issue_client_certificate = true
     }
   }
 
