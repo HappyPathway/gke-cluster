@@ -8,7 +8,7 @@ data "external" "json_date" {
     depends_on = [
         "null_resource.timestamp"
     ]
-    program = ["cat", "/tmp/data.json"]
+    program = ["cat", "/tmp/date.json"]
 }
 
 resource "null_resource" "force_update" {
