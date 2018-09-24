@@ -3,7 +3,6 @@ variable "cluster_zone" {
 
 }
 
-
 variable "additional_zones" {
     type = "list"
     default = [

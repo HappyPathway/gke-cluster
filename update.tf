@@ -1,20 +1,18 @@
-variable "timestamp_cmd" {
-    type = "list"
-    description = "Command for timestamp"
-    default = ["date", 
-               "|", 
-               "/usr/bin/env", 
-               "python2.7", 
-               "-c", 
-               "import sys, json; print json.dumps(dict(timestamp=sys.stdin.read().strip()))"] 
+resource "null_resource" "timestamp" {
+  provisioner "local-exec" {
+      command = "date +%s | /usr/bin/env python2.7 -c 'import sys, json; print json.dumps(dict(timestamp=sys.stdin.read().strip()))' > /tmp/date.json" 
+  }
 }
 
-data "external" "date" {
-  program = "${var.timestamp_cmd}"
+data "external" "json_date" {
+    depends_on = [
+        "null_resource.timestamp"
+    ]
+    program = ["cat", "/tmp/data.json"]
 }
 
 resource "null_resource" "force_update" {
   provisioner "local-exec" {
-      command = "echo ${data.external.date.result}"
+      command = "echo ${data.external.json_date.result}"
   }
 }
