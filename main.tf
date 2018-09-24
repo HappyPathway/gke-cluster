@@ -30,10 +30,7 @@ resource "google_container_cluster" "primary" {
   zone               = "${var.cluster_zone}"
   initial_node_count = 3
 
-  additional_zones = [
-    "us-central1-b",
-    "us-central1-c",
-  ]
+  additional_zones = "${var.additional_zones}"
 
   master_auth {
     username = "${random_string.username.result}"
@@ -55,3 +52,4 @@ resource "google_container_cluster" "primary" {
   }
 }
 
+ 
