@@ -4,6 +4,6 @@ data "external" "date" {
 
 resource "null_resource" "force_update" {
   provisioner "local-exec" {
-      command = "echo ${data.exter.date.result}"
+      command = "echo ${data.external.date.result}"
   }
 }
